@@ -59,13 +59,16 @@ export default function Home() {
         <Link href="https://github.com/rehan-remade" className="text-muted-foreground hover:text-foreground">
           <Github className="h-6 w-6" />
         </Link>
+        <Link href="https://github.com/RehanSheikh-eng" className="text-muted-foreground hover:text-foreground">
+          <Github className="h-6 w-6" />
+        </Link>
         <Link href="https://x.com/rehan_shei" className="text-muted-foreground hover:text-foreground">
           <Twitter className="h-6 w-6" />
         </Link>
         <Link href="mailto:rehan@remade.ai" className="text-muted-foreground hover:text-foreground">
           <Mail className="h-6 w-6" />
         </Link>
-        <Link href="https://linkedin.com/in/rehan-sheikh" className="text-muted-foreground hover:text-foreground">
+        <Link href="https://www.linkedin.com/in/rehan-sheikh-1102/" className="text-muted-foreground hover:text-foreground">
           <Linkedin className="h-6 w-6" />
         </Link>
       </div>
