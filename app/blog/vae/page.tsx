@@ -38,8 +38,8 @@ export default function VAEPost() {
     <article className="container mx-auto px-4 py-8 prose prose-lg dark:prose-invert max-w-4xl">
 
       <p>
-        Part of my role as CTO of <Link href="https://remade.ai">Remade AI</Link> is working on diffusion models. The new generation of diffusion models are Latent Diffusion Models (LDMs). 
-        These models operate in a compressed latent space, VAEs are the things that do the "compressing" and "decompressing". An interesting byproduct of working with such models is that my cofounders have often times found me in the office at 2am staring at the screen
+        Part of my role as CTO of <Link href="https://remade.ai">Remade AI</Link> is working on diffusion models, the new generation of which are Latent Diffusion Models (LDMs). 
+        These models operate in a compressed latent space and VAEs are the things that do the "compressing" and "decompressing". An interesting byproduct of working with such models is that my cofounders have often found me in the office at 2am staring at the screen
         muttering to myself "What the F*** is a VAE?". This blog post is my attempt to answer that question!
       </p>
       
@@ -458,11 +458,10 @@ export default function VAEPost() {
 
         <p>
         In short, a <em>well-disentangled VAE</em> helps us push the diffusion process 
-        into a more interpretable and manipulable domain—empowering easy factor-specific 
+        into a more interpretable and manipulable domain—enabling easy factor-specific 
         editing or exploration. Of course, in large real-world datasets (like images from 
         the web), achieving full disentanglement is tricky. But even partial disentanglement, 
-        as shown in our MNIST or toy examples, can significantly improve the <em>user control</em> 
-        and <em>semantic clarity</em> of generative pipelines.
+        as shown in our MNIST or toy examples, can significantly improve the <em>user control</em> and <em>semantic clarity</em> of generative pipelines.
         </p>
 
     </article>
