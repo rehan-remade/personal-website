@@ -4,47 +4,72 @@ import KatexSpan from '@/components/KatexSpan'
 import { useState, useEffect } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
+import { InferenceSession, Tensor } from "onnxruntime-web";
 
 export default function InteractiveVaeDemo() {
   const [label, setLabel] = useState<number>(0);
   const [tiltValue, setTiltValue] = useState<number>(0);
   const [reconstructionImage, setReconstructionImage] = useState<string | null>(null);
+  const [encoderSession, setEncoderSession] = useState<InferenceSession | null>(null);
+  const [decoderSession, setDecoderSession] = useState<InferenceSession | null>(null);
 
-  // Generate image whenever label or tilt changes
   useEffect(() => {
-    handleGenerate();
-  }, [label, tiltValue]);
+    (async () => {
+      if (!encoderSession) {
+        const session = await InferenceSession.create("/models/conditional_beta_vae_encoder.onnx", {
+          executionProviders: ["wasm"]
+        });
+        setEncoderSession(session);
+      }
+      if (!decoderSession) {
+        const session = await InferenceSession.create("/models/conditional_beta_vae_decoder.onnx", {
+          executionProviders: ["wasm"]
+        });
+        setDecoderSession(session);
+      }
+    })();
+  }, [encoderSession, decoderSession]);
+
+  useEffect(() => {
+    if (encoderSession && decoderSession) {
+      handleGenerate();
+    }
+  }, [label, tiltValue, encoderSession, decoderSession]);
 
   async function handleGenerate() {
+    if (!encoderSession || !decoderSession) return;
+
     const pixelData = new Array(784).fill(0.5); // Start with gray image
 
-    const response = await fetch("/api/run-model", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        pixelData,
-        label,
-        tiltValue,
-      }),
-    });
-    const result = await response.json();
-    if (result.x_hat) {
-      const canvas = document.createElement('canvas');
-      canvas.width = 28;
-      canvas.height = 28;
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        const imageData = ctx.createImageData(28, 28);
-        for (let i = 0; i < result.x_hat.length; i++) {
-          const pixelValue = Math.floor((1 - result.x_hat[i]) * 255); // Invert by subtracting from 1
-          imageData.data[i * 4] = pixelValue;     // R
-          imageData.data[i * 4 + 1] = pixelValue; // G 
-          imageData.data[i * 4 + 2] = pixelValue; // B
-          imageData.data[i * 4 + 3] = 255;        // Alpha
-        }
-        ctx.putImageData(imageData, 0, 0);
-        setReconstructionImage(canvas.toDataURL());
+    const xTensor = new Tensor("float32", Float32Array.from(pixelData), [1, 784]);
+    const labelArr = new BigInt64Array([BigInt(label)]);
+    const yTensor = new Tensor("int64", labelArr, [1]);
+
+    const encoderResults = await encoderSession.run({ x: xTensor, y: yTensor });
+    const mu = encoderResults["mu"].data as Float32Array;
+
+    const latentVector = Array.from(mu);
+    latentVector[3] = tiltValue;
+
+    const zTensor = new Tensor("float32", Float32Array.from(latentVector), [1, 10]);
+    const decoderResults = await decoderSession.run({ z: zTensor, y: yTensor });
+    const xHat = decoderResults["x_hat"].data as Float32Array;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 28;
+    canvas.height = 28;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      const imageData = ctx.createImageData(28, 28);
+      for (let i = 0; i < xHat.length; i++) {
+        const pixelValue = Math.floor((1 - xHat[i]) * 255);
+        imageData.data[i * 4] = pixelValue;     // R
+        imageData.data[i * 4 + 1] = pixelValue; // G
+        imageData.data[i * 4 + 2] = pixelValue; // B
+        imageData.data[i * 4 + 3] = 255;        // A
       }
+      ctx.putImageData(imageData, 0, 0);
+      setReconstructionImage(canvas.toDataURL());
     }
   }
 
