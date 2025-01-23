@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import 'katex/dist/katex.min.css'
 import KatexSpan from '@/components/KatexSpan'
 import Image from 'next/image'
@@ -39,7 +40,7 @@ export default function VAEPost() {
       <p>
         Part of my role as CTO of <Link href="https://remade.ai">Remade AI</Link> is working on diffusion models. The new generation of diffusion models are Latent Diffusion Models (LDMs). 
         These models operate in a compressed latent space, VAEs are the things that do the "compressing" and "decompressing". An interesting byproduct of working with such models is that my cofounders have often times found me in the office at 2am staring at the screen
-        muttering to myself "What the F*** is a VAE?". This blog post is my attempt to answer that question :)
+        muttering to myself "What the F*** is a VAE?". This blog post is my attempt to answer that question!
       </p>
       
       <h2>What are Autoencoders?</h2>
@@ -269,7 +270,7 @@ export default function VAEPost() {
 
         <p>
         A <strong>disentangled</strong> variational autoencoder aims for each latent dimension (or a small subset thereof) to correspond to 
-        a single factor of variation in your dataset. In other words, we’d love each axis in <KatexSpan text="\mathbf{z}" inline /> 
+        a single factor of variation in your dataset. In other words, we'd love each axis in <KatexSpan text="\mathbf{z}" inline /> 
         to capture a different interpretable property—like line thickness or tilt—<em>without</em> mixing those properties 
         in the same dimension.
         </p>
@@ -283,7 +284,7 @@ export default function VAEPost() {
         implying no single dimension (or handful of them) dominates.
         </p>
         <p>
-        Since the curve has no clear “elbow,” it suggests these latent spaces 
+        Since the curve has no clear "elbow," it suggests these latent spaces 
         are <em>quite entangled</em>—the variance is spread out, with no single direction 
         accounting for a big chunk of variation.
         </p>
@@ -313,7 +314,7 @@ export default function VAEPost() {
         </p>
 
         <p>
-        The <strong>Flux VAE</strong> shows somewhat “random” or “flickering” transformations. 
+        The <strong>Flux VAE</strong> shows somewhat "random" or "flickering" transformations. 
         In <strong>Figure 4</strong> (the accompanying GIF), the reconstructions 
         look mostly like noise or small chaotic changes—indicating these latent 
         directions do <strong>not</strong> correspond to a single factor (e.g., shape or color). 
@@ -348,12 +349,12 @@ export default function VAEPost() {
 
         <ul>
         <li>
-            “<strong>Conditioned</strong>” means we feed the digit class label <KatexSpan text="y" inline />
+            "<strong>Conditioned</strong>" means we feed the digit class label <KatexSpan text="y" inline />
             along with the image <KatexSpan text="\mathbf{x}" inline /> into the encoder and decoder. 
             This helps the VAE to separate label-driven variation from other variation.
         </li>
         <li>
-            “<strong>Beta</strong>” means we scale the KL term by <KatexSpan text="\beta" inline />, 
+            "<strong>Beta</strong>" means we scale the KL term by <KatexSpan text="\beta" inline />, 
             pushing the model to compress the representation more aggressively and (hopefully) 
             isolate distinct factors in separate latent dims.
         </li>
@@ -436,20 +437,20 @@ export default function VAEPost() {
         <ul>
         <li>
             The diffusion model might add noise along a specific dimension that 
-            strictly corresponds to “stroke thickness,” letting you generate new samples 
+            strictly corresponds to "stroke thickness," letting you generate new samples 
             with controlled variation of that factor.
         </li>
         <li>
             A <strong>structured</strong> latent space often allows <em>fewer steps</em> or 
             easier sampling, as the factors are not entangled in complex ways the model 
-            has to “untangle.”
+            has to "untangle."
         </li>
         </ul>
 
         <p>
         That said, <strong>training-time trade-offs</strong> arise. Pushing for disentanglement 
         (often via a bigger <KatexSpan text="\beta" inline /> or a FactorVAE penalty) 
-        can increase the model’s complexity, slow down training, and 
+        can increase the model's complexity, slow down training, and 
         sometimes degrade raw reconstruction quality. 
         But if the final goal is a stable, controllable latent space (like for LDMs), 
         it might be worth the extra training overhead. 
