@@ -22,7 +22,7 @@ export default function VAEPost() {
         {/* Overlay content */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background">
           <div className="max-w-4xl mx-auto px-4 h-full flex flex-col justify-end pb-16">
-            <h1 className="text-[64px] leading-tight font-semibold text-center">
+            <h1 className="text-[64px] leading-tight font-semibold text-center md:text-[64px] text-3xl">
               What the F*** is a VAE?
             </h1>
             <time 
@@ -35,12 +35,12 @@ export default function VAEPost() {
           </div>
         </div>
       </div>
-    <article className="container mx-auto px-4 py-8 prose prose-lg dark:prose-invert max-w-4xl">
+    <article className="container mx-auto px-4 py-8 prose prose-lg dark:prose-invert max-w-4xl prose-img:mx-auto prose-img:w-full">
 
       <p>
         Part of my role as CTO of <Link href="https://remade.ai">Remade AI</Link> is working on diffusion models, the new generation of which are Latent Diffusion Models (LDMs). 
-        These models operate in a compressed latent space and VAEs are the things that do the "compressing" and "decompressing". An interesting byproduct of working with such models is that my cofounders have often found me in the office at 2am staring at the screen
-        muttering to myself "What the F*** is a VAE?". This blog post is my attempt to answer that question!
+        These models operate in a compressed latent space and VAEs are the things that do the "compressing" and "decompressing." An interesting byproduct of working with such models is that my cofounders have often found me in the office at 2am staring at the screen
+        muttering to myself "What the F*** is a VAE?" This blog post is my attempt to answer that question!
       </p>
       
       <h2>What are Autoencoders?</h2>
@@ -131,7 +131,7 @@ export default function VAEPost() {
           </video>
         </div>
         <figcaption className="text-center mt-2 text-sm text-muted-foreground">
-          <strong>Figure 1:</strong> Training visualization of a VAE on MNIST digits: Original images (top) and their reconstructions (bottom) are shown, along with the training loss curve over 100 epochs.
+          <strong>Figure 1:</strong> Training visualization of an autoencoder on MNIST digits: Original images (top) and their reconstructions (bottom) are shown, along with the training loss curve over 100 epochs.
         </figcaption>
       </figure>
 
@@ -270,8 +270,8 @@ export default function VAEPost() {
 
         <p>
         A <strong>disentangled</strong> variational autoencoder aims for each latent dimension (or a small subset thereof) to correspond to 
-        a single factor of variation in your dataset. In other words, we'd love each axis in <KatexSpan text="\mathbf{z}" inline /> 
-        to capture a different interpretable property—like line thickness or tilt—<em>without</em> mixing those properties 
+        a single factor of variation in your dataset. In other words, we'd love each axis in <KatexSpan text="\mathbf{z}" inline /> to 
+        capture a different interpretable property, for example line thickness or tilt, without mixing those properties 
         in the same dimension.
         </p>
 
@@ -285,7 +285,7 @@ export default function VAEPost() {
         </p>
         <p>
         Since the curve has no clear "elbow," it suggests these latent spaces 
-        are <em>quite entangled</em>—the variance is spread out, with no single direction 
+        are <em>quite entangled</em> e.g. the variance is spread out, with no single direction 
         accounting for a big chunk of variation.
         </p>
 
@@ -316,7 +316,7 @@ export default function VAEPost() {
         <p>
         The <strong>Flux VAE</strong> shows somewhat "random" or "flickering" transformations. 
         In <strong>Figure 4</strong> (the accompanying GIF), the reconstructions 
-        look mostly like noise or small chaotic changes—indicating these latent 
+        look mostly like noise or small chaotic changesindicating these latent 
         directions do <strong>not</strong> correspond to a single factor (e.g., shape or color). 
         </p>
 
@@ -335,7 +335,7 @@ export default function VAEPost() {
         </div>
         <figcaption className="text-center mt-2 text-sm text-muted-foreground">
             <strong>Figure 4:</strong> GIF stepping along top 5 PCA directions near an encoded image 
-            in the <em>SDXL VAE</em> and the <em>FLUX VAE</em>. Both produce pseudo-random variation 
+            in the <em>FLUX VAE</em>, producing pseudo-random variation 
             rather than a clear, single-factor transformation.
         </figcaption>
         </figure>
@@ -349,8 +349,8 @@ export default function VAEPost() {
 
         <ul>
         <li>
-            "<strong>Conditioned</strong>" means we feed the digit class label <KatexSpan text="y" inline />
-            along with the image <KatexSpan text="\mathbf{x}" inline /> into the encoder and decoder. 
+            "<strong>Conditioned</strong>" means we feed the digit class label <KatexSpan text="y" inline /> along
+            with the image <KatexSpan text="\mathbf{x}" inline /> into the encoder and decoder. 
             This helps the VAE to separate label-driven variation from other variation.
         </li>
         <li>
@@ -379,8 +379,8 @@ export default function VAEPost() {
         Here, <KatexSpan text="q_{\phi}(\mathbf{z}\mid \mathbf{x}, y)" inline /> is the 
         encoder distribution (mean &amp; log-variance come from a neural net 
         that sees both <KatexSpan text="\mathbf{x}" inline /> and label <KatexSpan text="y" inline />). 
-        Similarly, the decoder <KatexSpan text="p_{\theta}(\mathbf{x}\mid\mathbf{z}, y)" inline /> 
-        can incorporate the class label as an additional input. 
+        Similarly, the decoder <KatexSpan text="p_{\theta}(\mathbf{x}\mid\mathbf{z}, y)" inline /> can 
+        incorporate the class label as an additional input. 
         </p>
 
         <p>
@@ -408,10 +408,13 @@ export default function VAEPost() {
         </figure>
 
         <p>
-        In this MNIST-based demo, <em>one of the latent dimensions</em> (in particular, dimension #3) controls the "tilt" of the handwritten digit. 
-        That's a genuine example of partial disentanglement: changing that single 
-        latent dimension rotates the digit slightly left or right, 
-        with minimal effect on other attributes (like stroke thickness).
+        This demo runs entirely client-side using ONNX Runtime Web. I first trained the model in PyTorch, saved it 
+        as a safetensors checkpoint, then converted it to ONNX format using <code>torch.onnx.export</code>. The 
+        conversion process required careful handling of dynamic axes and opset versions to ensure compatibility. 
+        The resulting ONNX model is loaded directly in the browser via onnxruntime-web, which provides efficient 
+        inference without any server calls. When you interact with the demo, dimension #3 of the latent space 
+        shows clear control over the digit's tilt - a nice example of disentanglement preserved through the 
+        format conversion.
         </p>
         
         <figure>
@@ -449,7 +452,7 @@ export default function VAEPost() {
 
         <p>
         That said, <strong>training-time trade-offs</strong> arise. Pushing for disentanglement 
-        (often via a bigger <KatexSpan text="\beta" inline /> or a FactorVAE penalty) 
+        (often via a bigger <KatexSpan text="\beta" inline />) 
         can increase the model's complexity, slow down training, and 
         sometimes degrade raw reconstruction quality. 
         But if the final goal is a stable, controllable latent space (like for LDMs), 
@@ -458,11 +461,47 @@ export default function VAEPost() {
 
         <p>
         In short, a <em>well-disentangled VAE</em> helps us push the diffusion process 
-        into a more interpretable and manipulable domain—enabling easy factor-specific 
+        into a more interpretable and manipulable domain enabling easy factor-specific 
         editing or exploration. Of course, in large real-world datasets (like images from 
         the web), achieving full disentanglement is tricky. But even partial disentanglement, 
         as shown in our MNIST or toy examples, can significantly improve the <em>user control</em> and <em>semantic clarity</em> of generative pipelines.
         </p>
+        <h3>References</h3>
+
+        <ul>
+            <li>
+                <a href="https://github.com/aguerrerolopez/FA-VAE" target="_blank" rel="noopener noreferrer">
+                    Multi-view hierarchical Variational AutoEncoders with Factor Analysis latent space.
+                </a>
+            </li>
+            <li>
+                <a href="https://openaccess.thecvf.com/content_CVPR_2019/papers/Rolinek_Variational_Autoencoders_Pursue_PCA_Directions_by_Accident_CVPR_2019_paper.pdf" target="_blank" rel="noopener noreferrer">
+                    Variational Autoencoders Pursue PCA Directions (by Accident).
+                </a>
+
+            </li>
+            <li>
+                <a href="https://github.com/YannDubs/disentangling-vae" target="_blank" rel="noopener noreferrer">
+                    Disentangling VAE: Experiments for understanding disentanglement in VAE latent representations.
+                </a>
+
+            </li>
+            <li>
+                <a href="https://arxiv.org/pdf/1802.05983" target="_blank" rel="noopener noreferrer">
+                    Disentangling by Factorising: A method that improves upon β-VAE by encouraging factorial latent representations.
+                </a>
+            </li>
+            <li>
+                <a href="https://arxiv.org/pdf/1812.02833" target="_blank" rel="noopener noreferrer">
+                    Disentangling Disentanglement in Variational Autoencoders: A unified theoretical framework for analyzing and improving representations.
+                </a>
+            </li>
+            <li>
+                <a href="https://medium.com/swlh/learning-disentangled-representations-with-variational-autoencoders-b1bfe237fffb" target="_blank" rel="noopener noreferrer">
+                    Learning Disentangled Representations with Variational Autoencoders: A comprehensive overview of VAEs and disentanglement.
+                </a>
+            </li>
+        </ul>
 
     </article>
     </>

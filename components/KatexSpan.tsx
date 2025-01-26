@@ -18,7 +18,7 @@ export default function KatexSpan({ text, inline = false, className = "" }: Kate
 
     return (
       <span 
-        className={className} 
+        className={`${className} ${inline ? 'inline-block' : 'block overflow-x-auto'}`} 
         dangerouslySetInnerHTML={{ __html: html }}
       />
     );
