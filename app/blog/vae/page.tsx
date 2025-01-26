@@ -468,6 +468,11 @@ export default function VAEPost() {
 
         <ul>
             <li>
+                <a href="https://github.com/rehan-remade/vae-blog-post" target="_blank" rel="noopener noreferrer">
+                    View code here
+                </a>
+            </li>
+            <li>
                 <a href="https://github.com/aguerrerolopez/FA-VAE" target="_blank" rel="noopener noreferrer">
                     Multi-view hierarchical Variational AutoEncoders with Factor Analysis latent space.
                 </a>
