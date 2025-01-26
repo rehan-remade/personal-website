@@ -408,13 +408,11 @@ export default function VAEPost() {
         </figure>
 
         <p>
-        This demo runs entirely client-side using ONNX Runtime Web. I first trained the model in PyTorch, saved it 
-        as a safetensors checkpoint, then converted it to ONNX format using <code>torch.onnx.export</code>. The 
-        conversion process required careful handling of dynamic axes and opset versions to ensure compatibility. 
+        The demo below runs entirely client-side using ONNX Runtime Web. I first trained the model in PyTorch, saved it 
+        as a safetensors checkpoint, then converted it to ONNX format using <code>torch.onnx.export</code>. 
         The resulting ONNX model is loaded directly in the browser via onnxruntime-web, which provides efficient 
         inference without any server calls. When you interact with the demo, dimension #3 of the latent space 
-        shows clear control over the digit's tilt - a nice example of disentanglement preserved through the 
-        format conversion.
+        shows clear control over the digit's tilt - a nice example of disentanglement!
         </p>
         
         <figure>

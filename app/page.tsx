@@ -23,7 +23,7 @@ export default function Home() {
         <h2 className="text-xl text-muted-foreground">I like to build things.</h2>
         
         <p className="text-muted-foreground max-w-lg">
-          I'm an engineer that loves hard problems, currently focusing on AI particularly diffusion models. Currently CTO @ <Link href="https://www.remade.ai/" className="underline">Remade AI (YC S24)</Link> and living in San Francisco.
+          I'm an engineer that loves hard problems, primarily focusing on AI particularly diffusion models. Currently CTO @ <Link href="https://www.remade.ai/" className="underline">Remade AI (YC S24)</Link> and living in San Francisco.
         </p>
 
         <Button asChild className="mt-4">
