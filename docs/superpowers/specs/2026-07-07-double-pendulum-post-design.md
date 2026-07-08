@@ -54,7 +54,7 @@ Article shell identical to the VAE post: `<article className="container mx-auto 
 4. **§3 Making it not explode (integrators).**
    - The EOMs only give accelerations; animation requires time-stepping. Define the state y = (θ₁, θ₂, ω₁, ω₂) and the derivative function.
    - Explicit Euler: what it is, why its energy grows (it steps along tangents that spiral outward on curved orbits). This is the mystery instability in the original video.
-   - The aside that pays for the whole section: Shiffman's "weird reordering that fixed it" — updating velocity before position — is **semi-implicit (symplectic) Euler**, an integrator that conserves a shadow energy. He discovered symplectic integration by accident, live.
+   - The aside that pays for the whole section: Shiffman's "weird reordering that fixed it" — updating velocity before position — is **semi-implicit Euler**. For separable systems (like the single pendulum) it is truly symplectic and conserves a shadow energy forever; the double pendulum's θ-dependent mass matrix breaks the strict guarantee, so its energy error drifts slowly (first-order) instead of oscillating — but it still never runs away the way explicit Euler does, which is why the reordering rescued the sketch. He reached for a deep piece of numerical analysis by accident, live.
    - RK4 in brief: sample the derivative four times per step, weighted average, O(h⁴) error. Everything else in the post runs RK4 at fixed dt.
    - **Interactive 3 — `IntegratorShowdown` (Figure 5).**
 
@@ -77,9 +77,9 @@ Article shell identical to the VAE post: `<article className="container mx-auto 
 
 Shared conventions (all five): wrapped in `<figure>` + numbered `<figcaption>`; `not-prose`; light panel — `rounded-xl border bg-card` around a white canvas; play/pause and reset icon buttons (lucide `Play`/`Pause`/`RotateCcw`) in a control row; shadcn `Slider` with `KatexSpan` labels and live numeric readout; canvas is responsive (fills container width, fixed aspect ratio, DPR-scaled backing store). Autoplay on load **except** when `prefers-reduced-motion: reduce` — then start paused showing a static first frame. Dragging a bob pauses integration and re-launches on release from the dragged angles with zero angular velocity.
 
-1. **`SinglePendulumDemo`** — one pendulum, drag bob to set θ₀. Controls: length r (0.5–2 m), gravity g (1–25, default 9.81, tick label at 9.81 "Earth" and 1.62 "Moon"). Toggle: "show small-angle ghost" (default on) — a translucent second pendulum following θ₀cos(ωt) exactly; at small θ₀ they superpose, at large θ₀ they visibly dephase within a few swings. Readout: measured period vs 2π√(r/g).
+1. **`SinglePendulumDemo`** — one pendulum, drag bob to set θ₀. Controls: length r (0.5–2 m), gravity g (1–25, default 9.81, with "Earth" (9.81) and "Moon" (1.62) preset buttons beside the slider). Toggle: "show small-angle ghost" (default on) — a translucent second pendulum following θ₀cos(ωt) exactly; at small θ₀ they superpose, at large θ₀ they visibly dephase within a few swings. Readout: measured period vs 2π√(r/g).
 2. **`DoublePendulumSim`** — the centerpiece. Drag either bob (inverse kinematics from pointer: θ₁ from pivot→bob1, θ₂ from bob1→bob2). Sliders: m₁, m₂ (0.1–5 kg), r₁, r₂ (0.5–1.5 m), g (1–25). Trail: toggle + length slider (up to ~12 s of bob-2 path, drawn as a polyline fading with age, colored from the chart tokens). Buttons: pause/play, reset (to θ₁=θ₂=π/2 at rest). Bob radius scales with ∛m.
-3. **`IntegratorShowdown`** — three mini-panels side by side (stacked on mobile): explicit Euler / symplectic Euler / RK4, identical initial conditions (θ₁=θ₂=π/2, rest), each labeled. One shared timestep slider (dt from 1/240 s up to 1/30 s) and restart button. Below: a live line chart, total energy E(t) vs t for all three (one line per integrator, chart-token colors, ~60 s rolling window, y auto-scaled). Expected reading: Euler climbs and eventually goes wild, symplectic oscillates around the truth, RK4 flat. If a state goes non-finite (Euler at large dt will), freeze that panel with an "energy: ∞ — integration failed" overlay instead of NaN-crashing; its energy line stops.
+3. **`IntegratorShowdown`** — three mini-viewports side by side on one shared canvas (they remain side by side on mobile; the energy chart below carries the message on small screens): explicit Euler / semi-implicit Euler / RK4, identical initial conditions (θ₁=θ₂=π/2, rest), each labeled. One shared timestep slider (dt from 1/240 s up to 1/30 s) and restart button. Below: a live line chart, total energy E(t) vs t for all three (one line per integrator, chart-token colors, ~60 s rolling window, y fixed to a window around E₀ — wide enough below to show the semi-implicit line's slow wander, with Euler's line deliberately exiting the top). Expected reading: Euler climbs and eventually goes wild, semi-implicit drifts slowly but stays tame, RK4 flat. If a state goes non-finite (Euler at large dt will), freeze that panel with an "energy: ∞ — integration failed" overlay instead of NaN-crashing; its energy line stops.
 4. **`ChaosTwins`** — N pendulums, slider N (2–50, default 20), all launched from θ₁=θ₂=2 (rad, well into the chaotic regime) with bob-2 initial angle offsets of k·δ, δ = 10⁻⁷ rad. Color: interpolated gradient across the chart tokens. Below: divergence chart — log₁₀ of the RMS state separation between pendulum 0 and pendulum N−1 vs time; exponential divergence reads as a straight line, saturating near the attractor diameter. Restart button re-randomizes nothing (deterministic — that's the point); a "nudge" button restarts with a different base angle.
 5. **`FlipFractal`** — heatmap over (θ₁, θ₂) ∈ [−π, π]², released from rest, colored by time until bob 2 first flips over the top — with unwrapped angles, the first time |θ₂| exceeds π. Log-scaled sequential colormap; "never within budget" = neutral gray; energetically-forbidden region = slightly distinct neutral, with the analytic curve 2cos θ₁ + cos θ₂ = 1 stroked on top. Fixed physics: m₁=m₂=1, r₁=r₂=1, g=9.81. Quality toggle: Fast 120×120 (default) / Fine 360×360. Compute: pool of `min(4, navigator.hardwareConcurrency − 1)` Web Workers, rows striped across workers, RK4 at dt = 1/120 to T_max = 30 s sim time, energy-pruned as above; results streamed back in row chunks (transferable Float32Array) and painted incrementally; thin progress bar; generation token cancels stale runs when quality changes. Hover (pointer) shows (θ₁°, θ₂°, flip time); **click any pixel to launch that initial condition** in a small companion pendulum panel beside/below the heatmap (its own mini sim + "this pixel" marker on the map).
 
@@ -91,8 +91,9 @@ lib/pendulum/
                     single & double pendulum (matrix form + 2×2 solve), total
                     energy functions, flipForbidden(θ1, θ2) boundary predicate
   integrators.ts    stepEuler / stepSymplecticEuler / stepRK4 — generic over a
-                    derivative fn on Float64Array states; makeAccumulator(dt)
-                    fixed-timestep helper (clamps frame delta to 100 ms)
+                    derivative fn on Float64Array states (the fixed-timestep
+                    accumulator, clamping frame delta to 100 ms, lives inside
+                    useSimCanvas — its only consumer)
   physics.test.ts   vitest unit tests (see Testing)
 components/double-pendulum/
   useSimCanvas.ts   hook: DPR-scaled responsive canvas + rAF loop with fixed
@@ -132,7 +133,7 @@ scripts/render-banner.mjs            throwaway generator (plain Node, no deps)
 
 ## Listing entry
 
-Append to the `posts` array in `app/blog/page.tsx`:
+Prepend to the `posts` array in `app/blog/page.tsx` (newest first — the grid renders in array order):
 `{ title: "My First Program Was Chaos", date: "July 7, 2026", slug: "double-pendulum", image: doublePendulumBanner }` with the corresponding static import. Hero `<time dateTime="2026-07-07">`.
 
 ## Testing (vitest, dev-only)
@@ -140,10 +141,10 @@ Append to the `posts` array in `app/blog/page.tsx`:
 Add `vitest` + `"test": "vitest run"` script + minimal `vitest.config.ts` (node environment, `lib/**/*.test.ts`). Tests target only `lib/pendulum` (pure functions, no DOM):
 
 1. **Small-angle period:** single pendulum, θ₀ = 0.01, RK4 dt = 1/240; measured half-period via zero crossings ≈ π√(r/g) within 0.1%.
-2. **RK4 energy conservation:** double pendulum, chaotic IC (π/2, π/2), 60 s: |E(t) − E(0)| / |E(0)| < 10⁻⁴ throughout.
-3. **Explicit Euler drifts:** same IC, 10 s: E(10 s) − E(0) > 1% of |E(0)| — documents the bug the post explains.
-4. **Symplectic Euler bounded:** same IC, 60 s: energy error stays within 5% (oscillates, doesn't trend).
-5. **Cross-check against the explicit formulas:** the myphysicslab closed-form accelerations (independently transcribed in the test file only) agree with the matrix-solve derivative to 10⁻¹² across randomized states — two independent derivations, one truth.
+2. **RK4 energy conservation:** double pendulum, chaotic IC (θ₁=θ₂=2 rad, rest), 60 s: |E(t) − E(0)| < 10⁻⁴ · E_scale throughout, where E_scale = (m₁+m₂)g(r₁+r₂). (Normalizing by |E(0)| is a trap — E(0) is exactly zero for release at (π/2, π/2).)
+3. **Explicit Euler drifts:** same IC, 10 s: E(10 s) − E(0) > 1% of E_scale — documents the bug the post explains.
+4. **Semi-implicit Euler bounded (two-part):** (a) on the *single* pendulum (separable, truly symplectic): θ₀ = 2 rad, 60 s, energy error < 3% of mgr — bounded oscillation, no trend; (b) on the double pendulum: same chaotic IC, 60 s, energy error < 1.0 · E_scale — the method is NOT symplectic here (θ-dependent mass matrix) and drifts ≈ 0.64·E_scale at dt = 1/240, so only the qualitative contrast with explicit Euler's runaway is asserted.
+5. **Cross-check against the explicit formulas:** the myphysicslab closed-form accelerations (independently transcribed in the test file only) agree with the matrix-solve derivative to 10⁻¹⁰ relative across randomized states (the two derivations use different trig factorizations, so exact 10⁻¹² FP agreement isn't guaranteed) — two independent derivations, one truth.
 6. **Flip boundary consistency:** for points with 2cos θ₁ + cos θ₂ > 1, rest energy < the minimum flip potential computed from the V function itself.
 
 Interactive behavior is verified manually via the dev server (and the `verify` skill) — no DOM test infrastructure in this repo, not worth adding for one post.
