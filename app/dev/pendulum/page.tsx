@@ -2,6 +2,7 @@
 import SinglePendulumDemo from '@/components/double-pendulum/SinglePendulumDemo'
 import DoublePendulumSim from '@/components/double-pendulum/DoublePendulumSim'
 import IntegratorShowdown from '@/components/double-pendulum/IntegratorShowdown'
+import ChaosTwins from '@/components/double-pendulum/ChaosTwins'
 
 export default function PendulumDevPage() {
   return (
@@ -11,6 +12,7 @@ export default function PendulumDevPage() {
       <SinglePendulumDemo />
       <DoublePendulumSim />
       <IntegratorShowdown />
+      <ChaosTwins />
     </main>
   )
 }
