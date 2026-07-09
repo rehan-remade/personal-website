@@ -88,9 +88,12 @@ function rampColor(t) {
 // Simulation + layout parameters (tune these if the composition needs it).
 // ---------------------------------------------------------------------------
 const PARAMS = { m1: 1, m2: 1, r1: 1, r2: 1, g: 9.81 }
-const N_PENDULUMS = 12
+// 28 pendulums over 14 s (up from the spec's 12 over 10 s): the sparse
+// version read as line art; this density is what actually looks like a
+// long-exposure photograph. Compared side by side at 1000px before adopting.
+const N_PENDULUMS = 28
 const DT = 1 / 240
-const DURATION_S = 10
+const DURATION_S = 14
 const SAMPLE_EVERY = 8
 
 // Layout was tuned from the spec's starting point of pivot (800, 290) at
@@ -107,7 +110,7 @@ const PIVOT_X = 800
 const PIVOT_Y = 385
 const PX_PER_M = 225
 
-const STROKE_WIDTH = 2.2
+const STROKE_WIDTH = 1.7
 const AGE_CHUNKS = [
   { frac: 0.4, opacity: 0.15 },
   { frac: 0.35, opacity: 0.35 },
