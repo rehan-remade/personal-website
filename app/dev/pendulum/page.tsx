@@ -1,5 +1,6 @@
 // TEMPORARY dev harness for the double pendulum demos. Deleted in Task 11.
 import SinglePendulumDemo from '@/components/double-pendulum/SinglePendulumDemo'
+import DoublePendulumSim from '@/components/double-pendulum/DoublePendulumSim'
 
 export default function PendulumDevPage() {
   return (
@@ -7,6 +8,7 @@ export default function PendulumDevPage() {
       <h1 className="text-2xl font-bold">Pendulum demo harness</h1>
       {/* Demos are appended here as they are built (Tasks 5–9). */}
       <SinglePendulumDemo />
+      <DoublePendulumSim />
     </main>
   )
 }
