@@ -1,6 +1,7 @@
 import { Metadata } from "next"
 import BlogCard from "@/components/blog-card"
 import vaeImage from "@/public/vae_banner.jpg"
+import doublePendulumBanner from "@/public/double-pendulum-banner.svg"
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -9,6 +10,12 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   const posts = [
+    {
+      title: "My First Program Was Chaos",
+      date: "July 7, 2026",
+      slug: "double-pendulum",
+      image: doublePendulumBanner,
+    },
     {
       title: "What the F*** is a VAE?",
       date: "January 23, 2025",

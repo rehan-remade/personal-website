@@ -3,11 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Github, Twitter, Mail, Linkedin } from "lucide-react";
+import Investments from "@/components/investments";
 
 
 export default function Home() {
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen max-w-3xl mx-auto px-4">
+    <main className="flex flex-col items-center justify-center min-h-screen max-w-3xl mx-auto px-4 py-24">
       {/* Profile Section */}
       <div className="flex flex-col items-center text-center space-y-6">
         <Image
@@ -32,6 +33,9 @@ export default function Home() {
           </Link>
         </Button>
       </div>
+
+      {/* Angel Investments Section */}
+      <Investments />
 
       {/* Get in Touch Section */}
       <div className="mt-24 text-center">
