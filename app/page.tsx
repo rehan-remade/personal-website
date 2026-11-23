@@ -24,7 +24,7 @@ export default function Home() {
         <h2 className="text-xl text-muted-foreground">I like to build things.</h2>
         
         <p className="text-muted-foreground max-w-lg">
-          I'm an engineer that loves hard problems, primarily focusing on AI particularly diffusion models. Currently working on the serverless platform @ <Link href="https://fal.ai/" className="underline">fal</Link> and living in San Francisco. Previously CTO @ Remade AI (YC S24), acquired by fal.
+          I'm an engineer who loves hard problems, mostly in AI. Now CEO @ <Link href="https://patch.gg/" className="underline">Patch</Link>, the one-click home for AI-made mods and games. Previously CTO @ Remade AI (YC S24), acquired by fal. Based in San Francisco.
         </p>
 
         <Button asChild className="mt-4">
@@ -47,7 +47,7 @@ export default function Home() {
         
         <div className="flex gap-4 justify-center">
           <Button asChild variant="default">
-            <Link href="mailto:rehan@fal.ai">
+            <Link href="mailto:rehan@patch.gg">
               👋 Say hello
             </Link>
           </Button>
@@ -70,7 +70,7 @@ export default function Home() {
         <Link href="https://x.com/rehan_shei" className="text-muted-foreground hover:text-foreground">
           <Twitter className="h-6 w-6" />
         </Link>
-        <Link href="mailto:rehan@fal.ai" className="text-muted-foreground hover:text-foreground">
+        <Link href="mailto:rehan@patch.gg" className="text-muted-foreground hover:text-foreground">
           <Mail className="h-6 w-6" />
         </Link>
         <Link href="https://www.linkedin.com/in/rehan-sheikh-1102/" className="text-muted-foreground hover:text-foreground">

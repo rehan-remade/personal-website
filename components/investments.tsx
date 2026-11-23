@@ -5,6 +5,51 @@ import { ArrowUpRight } from "lucide-react";
 
 const investments = [
   {
+    name: "FlashDrive",
+    url: "https://flashdrive.ai/",
+    description: "A shared drive for your team and its AI agents.",
+    logo: "/investments/flashdrive.svg",
+    logoWidth: 852,
+    logoHeight: 852,
+    logoClassName: "h-11 w-11",
+  },
+  {
+    name: "Litmus",
+    url: "https://litmushiring.com/",
+    description: "Hiring evals built from your own codebase.",
+    logo: "/investments/litmus.png",
+    logoWidth: 300,
+    logoHeight: 300,
+    logoClassName: "h-11 w-11 object-contain",
+  },
+  {
+    name: "Lumeria",
+    url: "https://lumeria.com/",
+    description: "An Oura Ring for your skin.",
+    logo: "/investments/lumeria.svg",
+    logoWidth: 512,
+    logoHeight: 512,
+    logoClassName: "h-12 w-12",
+  },
+  {
+    name: "Palette",
+    url: "https://palettelabs.com/",
+    description: "Generative models for creative and physical design.",
+    logo: "/investments/palette.png",
+    logoWidth: 256,
+    logoHeight: 256,
+    logoClassName: "h-14 w-14 object-contain",
+  },
+  {
+    name: "Familiar Labs",
+    url: "https://www.thefamiliarlab.com/",
+    description: "AI dubbing that keeps the actor's face and voice.",
+    logo: "/investments/familiar.png",
+    logoWidth: 512,
+    logoHeight: 512,
+    logoClassName: "h-11 w-11 rounded-lg",
+  },
+  {
     name: "Anoria",
     url: "https://www.anoria.com/",
     description: "A wearable that reads and understands your emotions.",
@@ -41,7 +86,7 @@ export default function Investments() {
         A few early-stage companies I&apos;m lucky enough to back.
       </p>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
         {investments.map((investment) => (
           <Link
             key={investment.name}
