@@ -27,11 +27,18 @@ export default function Home() {
           I'm an engineer who loves hard problems, mostly in AI. Now CEO @ <Link href="https://patch.gg/" className="underline">Patch</Link>, the one-click home for AI-made mods and games. Previously CTO @ Remade AI (YC S24), acquired by fal. Based in San Francisco.
         </p>
 
-        <Button asChild className="mt-4">
-          <Link href="/blog">
-            Read my blog →
-          </Link>
-        </Button>
+        <div className="mt-4 flex flex-wrap justify-center gap-4">
+          <Button asChild>
+            <Link href="/projects">
+              See my projects →
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/blog">
+              Read my blog →
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {/* Angel Investments Section */}
